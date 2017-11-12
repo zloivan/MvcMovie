@@ -19,9 +19,25 @@ namespace MvcMovie.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string movieGenre, string searchString)
         {
-            return View(await _context.Movies.ToListAsync());
+            IQueryable<string> genreQuery = _context.Movies.OrderBy(m => m.Genre).Select(m => m.Genre);
+
+
+            var movies = _context.Movies.Select(m => m);
+            
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(s => s.Title.Contains(searchString));
+            }
+            if (!string.IsNullOrEmpty(movieGenre))
+            {
+                movies = movies.Where(x => x.Genre == movieGenre);
+            }
+            var movieGenreVM = new MovieGenreViewModel();
+            movieGenreVM.genres = new SelectList(await genreQuery.Distinct().ToArrayAsync());
+            movieGenreVM.movies = await movies.ToListAsync();
+            return View(movieGenreVM);
         }
 
         // GET: Movies/Details/5
