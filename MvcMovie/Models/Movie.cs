@@ -16,7 +16,7 @@ namespace MvcMovie.Models
         public string Genre { get; set; }
         [Required, Display(Name = "Price", Prompt = "Price"), DataType(DataType.Currency)]
         public decimal Price { get; set; }
-
-
+        [Required,Display(Name = "Rating",Prompt ="A-S"),DataType(DataType.Text),StringLength(maximumLength:10)]
+        public string Rating { get; set; }
     }
 }
